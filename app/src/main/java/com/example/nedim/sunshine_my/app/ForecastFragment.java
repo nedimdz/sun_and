@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,6 +30,13 @@ public class ForecastFragment extends Fragment {
     ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //Ovu liniju moramo dodati ako hoćemo da fragment ima menu
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -57,6 +67,22 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh){
+            FetchWeatherTask task = new FetchWeatherTask();
+            task.execute();
+            return  true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -85,7 +111,7 @@ public class ForecastFragment extends Fragment {
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
                     // Nothing to do.
-                    forecastJsonStr = null;
+                    return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -99,14 +125,14 @@ public class ForecastFragment extends Fragment {
 
                 if (buffer.length() == 0) {
                     // Stream was empty.  No point in parsing.
-                    forecastJsonStr = null;
+                    return null;
                 }
                 forecastJsonStr = buffer.toString();
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
                 // to parse it.
-                forecastJsonStr = null;
+                return  null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
