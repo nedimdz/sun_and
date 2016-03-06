@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Prognoza</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
     <string name="menu_refresh" translatable="false">Refresh</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">Settings</string>
@@ -26,6 +27,6 @@
 
     <!-- Value in SharedPreferences for imperial temperature unit option [CHAR LIMIT=NONE] -->
     <string name="pref_units_imperial" translatable="false">imperial</string>
-    <string name="menu_location_title">Location</string>
+    <string name="menu_location_title">Map Location</string>
 
 </resources>

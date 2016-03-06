@@ -8,7 +8,6 @@
         android:title="@string/menu_location_title"
         android:orderInCategory="30"
         app:showAsAction = "never" />
-
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
