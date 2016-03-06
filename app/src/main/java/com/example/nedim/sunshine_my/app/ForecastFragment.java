@@ -1,7 +1,9 @@
 package com.example.nedim.sunshine_my.app;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -79,8 +81,8 @@ public class ForecastFragment extends Fragment {
                 String forecast = mForecastAdapter.getItem(position);
 
                 //Toast.makeText(getActivity(),forecast, Toast.LENGTH_LONG).show();
-                Intent intent= new Intent(getActivity(),DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT,forecast);
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, forecast);
                 startActivity(intent);
             }
         });
@@ -99,6 +101,7 @@ public class ForecastFragment extends Fragment {
             updateWeather();
             return  true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

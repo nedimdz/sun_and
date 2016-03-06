@@ -26,5 +26,6 @@
 
     <!-- Value in SharedPreferences for imperial temperature unit option [CHAR LIMIT=NONE] -->
     <string name="pref_units_imperial" translatable="false">imperial</string>
+    <string name="menu_location_title">Location</string>
 
 </resources>
