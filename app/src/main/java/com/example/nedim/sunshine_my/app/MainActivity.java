@@ -78,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
         String location = sharedPref.getString(getString(R.string.pref_location_key),
                 getString(R.string.pref_location_default));
 
-        //String uriString= "geo:0,0?q="+location;
-        //Uri uri =Uri.parse(uriString);
+        String uriString= "geo:0,0?q="+location;
+        Uri geoLocation =Uri.parse(uriString);
 
-        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
-                .appendQueryParameter("g",location)
-                .build();
+        //Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+        //        .appendQueryParameter("g",location)
+        //        .build();
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(geoLocation);
