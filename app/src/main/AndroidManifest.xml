@@ -29,7 +29,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.nedim.sunshine_my.app.MainActivity" />
         </activity>
-
+    
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -38,6 +38,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.nedim.sunshine_my.app.MainActivity" />
         </activity>
+        
+        <provider
+            android:authorities="com.example.nedim.sunshine_my.app"
+            android:name=".data.WeatherProvider" />
     </application>
 
 </manifest>
