@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -21,6 +22,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.nedim.sunshine_my.app.data.WeatherContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +46,7 @@ import javax.xml.datatype.Duration;
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
-    public static ArrayAdapter<String> mForecastAdapter;
+    public static ForecastAdapter mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -64,28 +67,25 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+        // Sort order:  Ascending, by date.
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
+
+        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
+                null, null, null, sortOrder);
+
+        // The CursorAdapter will take data from our cursor and populate the ListView
+        // However, we cannot use FLAG_AUTO_REQUERY since it is deprecated, so we will end
+        // up with an empty list the first time we run.
+        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mForecastAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_forecast, // The name of the layout ID.
-                        R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        new ArrayList<String>());
+
         final ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String forecast = mForecastAdapter.getItem(position);
-
-                //Toast.makeText(getActivity(),forecast, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, forecast);
-                startActivity(intent);
-            }
-        });
         return rootView;
     }
 
@@ -106,12 +106,9 @@ public class ForecastFragment extends Fragment {
     }
 
     private void updateWeather() {
-        FetchWeatherTask task = new FetchWeatherTask(getActivity(),mForecastAdapter);
-        //Učitavanje stavke iz settingsa
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
-        task.execute(location);
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+        String location = Utility.getPreferredLocation(getActivity());
+        weatherTask.execute(location);
     }
 }
 
